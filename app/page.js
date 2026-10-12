@@ -6,27 +6,80 @@ import "./globals.css";
 export default function Home() {
   const [showLogin, setShowLogin] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [loginId, setLoginId] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginMessage, setLoginMessage] = useState("");
+  const [loggedInUser, setLoggedInUser] = useState(null);
 
   const openLogin = () => {
     setShowLogin(true);
     setLoginSuccess(false);
+    setLoginMessage("");
   };
 
   const closeLogin = () => {
     setShowLogin(false);
     setLoginSuccess(false);
+    setLoginMessage("");
+    setLoginId("");
+    setLoginPassword("");
+    setLoggedInUser(null);
+  };
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    if (loginLoading) return;
+
+    setLoginMessage("");
+
+    if (!loginId.trim() || !loginPassword) {
+      setLoginMessage("NISN/ID dan kata sandi wajib diisi.");
+      return;
+    }
+
+    setLoginLoading(true);
+
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          loginId: loginId.trim(),
+          password: loginPassword,
+        }),
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          result.message ||
+            "Login gagal. Periksa NISN/ID dan kata sandi."
+        );
+      }
+
+      setLoggedInUser(result.user || null);
+      setLoginSuccess(true);
+      setLoginMessage("");
+    } catch (error) {
+      setLoginMessage(
+        error.message || "Terjadi kesalahan saat login."
+      );
+      setLoginSuccess(false);
+    } finally {
+      setLoginLoading(false);
+    }
   };
 
   return (
     <main>
-
-      {/* =====================================================
-          NAVBAR
-      ===================================================== */}
-
+      {/* NAVBAR */}
       <header className="navbar">
         <div className="navbar-container">
-
           <a href="/" className="logo">
             <img
               src="/assets/logo.png"
@@ -35,7 +88,6 @@ export default function Home() {
           </a>
 
           <nav className="nav-menu">
-
             <a href="/" className="active">
               Home
             </a>
@@ -59,7 +111,6 @@ export default function Home() {
             >
               Login
             </button>
-
           </nav>
 
           <a
@@ -68,19 +119,12 @@ export default function Home() {
           >
             Hubungi Kami
           </a>
-
         </div>
       </header>
 
-
-      {/* =====================================================
-          HERO
-      ===================================================== */}
-
+      {/* HERO */}
       <section className="hero">
-
         <div className="hero-content">
-
           <h1>
             Membentuk Generasi Cerdas dan Siap
             <br />
@@ -94,18 +138,15 @@ export default function Home() {
           </p>
 
           <div className="hero-buttons">
-
             <a
               href="#program"
               className="btn-program"
             >
               Lihat Program
-
               <span
                 className="program-arrow"
                 aria-hidden="true"
               />
-
             </a>
 
             <a
@@ -114,252 +155,146 @@ export default function Home() {
             >
               PENDAFTARAN
             </a>
-
           </div>
-
         </div>
 
-
         <div className="hero-image">
-
           <img
             src="/assets/hero.png"
             alt="Permata Global"
           />
-
         </div>
-
       </section>
 
-
-      {/* =====================================================
-          STATISTICS
-      ===================================================== */}
-
+      {/* STATISTICS */}
       <section className="statistics">
-
         <div className="stat-item">
-
           <div className="stat-icon">
-
             <img
               className="stat-img"
               src="/assets/icon1.png"
               alt="Icon Siswa Aktif"
             />
-
           </div>
 
           <div>
-
-            <strong>
-              800+
-            </strong>
-
-            <span>
-              Siswa Aktif
-            </span>
-
+            <strong>800+</strong>
+            <span>Siswa Aktif</span>
           </div>
-
         </div>
 
-
         <div className="stat-item">
-
           <div className="stat-icon">
-
             <img
               className="stat-img"
               src="/assets/icon2.png"
               alt="Icon Guru dan Staf"
             />
-
           </div>
 
           <div>
-
-            <strong>
-              200+
-            </strong>
-
-            <span>
-              Guru & Staf Aktif
-            </span>
-
+            <strong>200+</strong>
+            <span>Guru &amp; Staf Aktif</span>
           </div>
-
         </div>
 
-
         <div className="stat-item">
-
           <div className="stat-icon">
-
             <img
               className="stat-img"
               src="/assets/icon3.png"
               alt="Icon Kelas dan Fasilitas"
             />
-
           </div>
 
           <div>
-
-            <strong>
-              50+
-            </strong>
-
-            <span>
-              Kelas & Fasilitas
-            </span>
-
+            <strong>50+</strong>
+            <span>Kelas &amp; Fasilitas</span>
           </div>
-
         </div>
 
-
         <div className="stat-item">
-
           <div className="stat-icon">
-
             <img
               className="stat-img"
               src="/assets/icon4.png"
               alt="Icon Akreditasi"
             />
-
           </div>
 
           <div>
-
-            <strong>
-              A
-            </strong>
-
-            <span>
-              Akreditasi Sekolah
-            </span>
-
+            <strong>A</strong>
+            <span>Akreditasi Sekolah</span>
           </div>
-
         </div>
-
       </section>
 
-
-      {/* =====================================================
-          WHY US
-      ===================================================== */}
-
+      {/* WHY US */}
       <section
         className="why-section"
         id="about"
       >
-
         <div className="why-image">
-
           <img
             src="/assets/school.png"
             alt="Lingkungan sekolah Permata Global"
           />
-
         </div>
 
-
         <div className="why-content">
-
-          <h2>
-            Mengapa Permata Global?
-          </h2>
-
+          <h2>Mengapa Permata Global?</h2>
 
           <div className="why-list">
-
             <div className="why-item">
-
-              <div className="why-number">
-                01
-              </div>
+              <div className="why-number">01</div>
 
               <div>
-
-                <h3>
-                  Kurikulum yang Relevan
-                </h3>
+                <h3>Kurikulum yang Relevan</h3>
 
                 <p>
                   Kurikulum yang membentuk anak-anak cerdas,
                   mempersiapkan mereka untuk masa depan, dan
                   membangun fondasi iman yang kuat.
                 </p>
-
               </div>
-
             </div>
 
-
             <div className="why-item">
-
-              <div className="why-number">
-                02
-              </div>
+              <div className="why-number">02</div>
 
               <div>
-
-                <h3>
-                  Sekolah yang Mendidik dengan Hati
-                </h3>
+                <h3>Sekolah yang Mendidik dengan Hati</h3>
 
                 <p>
                   Nilai-nilai Islam dan akhlak mulia bukan sekadar
                   pelajaran—hal tersebut diamalkan setiap hari,
                   di mana saja.
                 </p>
-
               </div>
-
             </div>
 
-
             <div className="why-item">
-
-              <div className="why-number">
-                03
-              </div>
+              <div className="why-number">03</div>
 
               <div>
-
-                <h3>
-                  Lingkungan Belajar yang Mendukung
-                </h3>
+                <h3>Lingkungan Belajar yang Mendukung</h3>
 
                 <p>
                   Ruang belajar yang modern dan nyaman, guru-guru
                   yang berdedikasi, serta lingkungan yang mendorong
                   anak-anak untuk mencapai potensi maksimal mereka.
                 </p>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </section>
 
-
-      {/* =====================================================
-          PROGRAM EDUKASI
-      ===================================================== */}
-
+      {/* PROGRAM EDUKASI */}
       <section
         className="program-section"
         id="program"
       >
-
         <div className="program-decoration blue-decoration">
           ∿
         </div>
@@ -368,195 +303,119 @@ export default function Home() {
           ∿
         </div>
 
-
         <div className="section-title">
-
-          <h2>
-            Program Edukasi Kami
-          </h2>
+          <h2>Program Edukasi Kami</h2>
 
           <p>
             Program pembelajaran yang dirancang untuk setiap tahap
             perkembangan anak.
           </p>
-
         </div>
-
 
         <div className="program-grid">
           <div className="program-row-top">
+            <div className="program-card">
+              <span className="age">Umur 2–4</span>
 
-          {/* =================================================
-              1. PRESCHOOL
-          ================================================= */}
+              <h3>Preschool</h3>
 
-          <div className="program-card">
+              <p>
+                Belajar dengan bermain untuk pertumbuhan
+                dan perkembangan awal.
+              </p>
 
-            <span className="age">
-              Umur 2–4
-            </span>
+              <img
+                src="/assets/image2.png"
+                alt="Preschool"
+              />
+            </div>
 
-            <h3>
-              Preschool
-            </h3>
+            <div className="program-card">
+              <span className="age">Umur 4–6</span>
 
-            <p>
-              Belajar dengan bermain untuk pertumbuhan
-              dan perkembangan awal.
-            </p>
+              <h3>Kindergarten</h3>
 
-            <img
-              src="/assets/image2.png"
-              alt="Preschool"
-            />
+              <p>
+                Membangun dasar pembelajaran dan
+                kemandirian.
+              </p>
 
-          </div>
+              <img
+                src="/assets/image3.png"
+                alt="Kindergarten"
+              />
+            </div>
 
+            <div className="program-card">
+              <span className="age">Umur 6–12</span>
 
-          {/* =================================================
-              2. KINDERGARTEN
-          ================================================= */}
+              <h3>Elementary</h3>
 
-          <div className="program-card">
+              <p>
+                Landasan akademik yang kuat dan
+                karakter Islami.
+              </p>
 
-            <span className="age">
-              Umur 4–6
-            </span>
-
-            <h3>
-              Kindergarten
-            </h3>
-
-            <p>
-              Membangun dasar pembelajaran dan
-              kemandirian.
-            </p>
-
-            <img
-              src="/assets/image3.png"
-              alt="Kindergarten"
-            />
-
-          </div>
-
-
-          {/* =================================================
-              3. ELEMENTARY
-          ================================================= */}
-
-          <div className="program-card">
-
-            <span className="age">
-              Umur 6–12
-            </span>
-
-            <h3>
-              Elementary
-            </h3>
-
-            <p>
-              Landasan akademik yang kuat dan
-              karakter Islami.
-            </p>
-
-            <img
-              src="/assets/image4.png"
-              alt="Elementary"
-            />
-
-          </div>
-
+              <img
+                src="/assets/image4.png"
+                alt="Elementary"
+              />
+            </div>
           </div>
 
           <div className="program-row-bottom">
-          {/* =================================================
-              4. JUNIOR HIGH SCHOOL
-          ================================================= */}
+            <div className="program-card wide">
+              <div className="program-text">
+                <span className="age">Umur 12–15</span>
 
-          <div className="program-card wide">
+                <h3>Junior High School</h3>
 
-            <div className="program-text">
+                <p>
+                  Memperkuat kemampuan akademis dan
+                  mempersiapkan diri untuk jenjang berikutnya.
+                </p>
+              </div>
 
-              <span className="age">
-                Umur 12–15
-              </span>
-
-              <h3>
-                Junior High School
-              </h3>
-
-              <p>
-                Memperkuat kemampuan akademis dan
-                mempersiapkan diri untuk jenjang berikutnya.
-              </p>
-
+              <img
+                src="/assets/image5.png"
+                alt="Junior High School"
+              />
             </div>
 
-            <img
-              src="/assets/image5.png"
-              alt="Junior High School"
-            />
+            <div className="program-card wide">
+              <div className="program-text">
+                <span className="age">Umur 15–17</span>
 
-          </div>
+                <h3>Senior High School</h3>
 
+                <p>
+                  Membangun keunggulan dan mempersiapkan
+                  diri untuk universitas impian Anda.
+                </p>
+              </div>
 
-          {/* =================================================
-              5. SENIOR HIGH SCHOOL
-          ================================================= */}
-
-          <div className="program-card wide">
-
-            <div className="program-text">
-
-              <span className="age">
-                Umur 15–17
-              </span>
-
-              <h3>
-                Senior High School
-              </h3>
-
-              <p>
-                Membangun keunggulan dan mempersiapkan
-                diri untuk universitas impian Anda.
-              </p>
-
+              <img
+                src="/assets/image6.png"
+                alt="Senior High School"
+              />
             </div>
-
-            <img
-              src="/assets/image6.png"
-              alt="Senior High School"
-            />
-
-          </div>
-
           </div>
         </div>
-
       </section>
 
-
-      {/* =====================================================
-          CTA
-      ===================================================== */}
-
+      {/* CTA */}
       <section
         className="cta-section"
         id="enrollment"
       >
-
         <div className="cta-images left-images">
-
           <img
             src="/assets/image7.png"
             alt=""
           />
-
         </div>
 
-
         <div className="cta-content">
-
           <h2>
             Awali Perjalanan Belajar Anak Anda
             <br />
@@ -569,37 +428,23 @@ export default function Home() {
           >
             ☎ Hubungi Kami
           </a>
-
         </div>
 
-
         <div className="cta-images right-images">
-
           <img
             src="/assets/image8.png"
             alt=""
           />
-
         </div>
-
       </section>
 
-
-      {/* =====================================================
-          FOOTER
-      ===================================================== */}
-
+      {/* FOOTER */}
       <footer
         className="footer"
         id="contact"
       >
-
         <div className="footer-container">
-
-          {/* SCHOOL INFO */}
-
           <div className="footer-column school-info">
-
             <img
               src="/assets/logo.png"
               alt="Permata Global"
@@ -616,170 +461,64 @@ export default function Home() {
               Jawa Barat 16435
             </p>
 
-            <p>
-              ☎ +62 812 1111555
-            </p>
+            <p>☎ +62 812 1111555</p>
 
-            <p>
-              ✉ permataglobaldepok@gmail.com
-            </p>
-
+            <p>✉ permataglobaldepok@gmail.com</p>
 
             <div className="socials">
-
-              <span>
-                f
-              </span>
-
-              <span>
-                ◎
-              </span>
-
-              <span>
-                ▶
-              </span>
-
-              <span>
-                in
-              </span>
-
+              <span>f</span>
+              <span>◎</span>
+              <span>▶</span>
+              <span>in</span>
             </div>
-
           </div>
-
-
-          {/* PROGRAM */}
 
           <div className="footer-column">
-
-            <h3>
-              Program
-            </h3>
-
-            <a href="#program">
-              Preschool
-            </a>
-
-            <a href="#program">
-              Kindergarten
-            </a>
-
-            <a href="#program">
-              Elementary
-            </a>
-
-            <a href="#program">
-              Junior High School
-            </a>
-
-            <a href="#program">
-              Senior High School
-            </a>
-
+            <h3>Program</h3>
+            <a href="#program">Preschool</a>
+            <a href="#program">Kindergarten</a>
+            <a href="#program">Elementary</a>
+            <a href="#program">Junior High School</a>
+            <a href="#program">Senior High School</a>
           </div>
-
-
-          {/* SEKOLAH */}
 
           <div className="footer-column">
-
-            <h3>
-              Sekolah Kami
-            </h3>
-
-            <a href="#about">
-              Tentang Kami
-            </a>
-
-            <a href="#about">
-              Fasilitas
-            </a>
-
-            <a href="#about">
-              Kurikulum
-            </a>
-
+            <h3>Sekolah Kami</h3>
+            <a href="#about">Tentang Kami</a>
+            <a href="#about">Fasilitas</a>
+            <a href="#about">Kurikulum</a>
           </div>
-
-
-          {/* ACTIVITIES */}
 
           <div className="footer-column">
-
-            <h3>
-              Aktivitas
-            </h3>
-
-            <a href="#activities">
-              Prestasi
-            </a>
-
-            <a href="#activities">
-              Ekstrakurikuler
-            </a>
-
+            <h3>Aktivitas</h3>
+            <a href="#activities">Prestasi</a>
+            <a href="#activities">Ekstrakurikuler</a>
           </div>
-
-
-          {/* PENDAFTARAN */}
 
           <div className="footer-column">
-
-            <h3>
-              Pendaftaran
-            </h3>
-
-            <a href="/register">
-              Pendaftaran
-            </a>
-
-            <a href="#contact">
-              Kontak Kami
-            </a>
-
+            <h3>Pendaftaran</h3>
+            <a href="/register">Pendaftaran</a>
+            <a href="#contact">Kontak Kami</a>
           </div>
-
         </div>
-
-
-        {/* FOOTER BOTTOM */}
 
         <div className="footer-bottom">
-
-          <p>
-            © 2026 Permata Global. All rights reserved.
-          </p>
-
-          <p>
-            Situs Oleh Zikry XI PPLG 1
-          </p>
-
+          <p>© 2026 Permata Global. All rights reserved.</p>
+          <p>Situs Oleh Zikry XI PPLG 1</p>
         </div>
-
       </footer>
 
-
-      {/* =====================================================
-          LOGIN OVERLAY
-      ===================================================== */}
-
+      {/* LOGIN OVERLAY */}
       {showLogin && (
-
         <div
           className="login-overlay"
-          onClick={(e) => {
-
-            if (e.target === e.currentTarget) {
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
               closeLogin();
             }
-
           }}
         >
-
           <div className="login-modal">
-
-            {/* CLOSE BUTTON */}
-
             <button
               type="button"
               className="login-close"
@@ -789,26 +528,15 @@ export default function Home() {
               ×
             </button>
 
-
-            {/* =================================================
-                LOGIN FORM
-            ================================================= */}
-
             {!loginSuccess ? (
-
               <>
-
                 <img
                   src="/assets/logo1.png"
                   alt="Prestasi Global"
                   className="login-logo"
                 />
 
-
-                <h2>
-                  Selamat Datang!
-                </h2>
-
+                <h2>Selamat Datang!</h2>
 
                 <p className="login-description">
                   Kamu siswa atau staff? Silahkan masuk
@@ -816,87 +544,88 @@ export default function Home() {
                   untuk melanjutkannya
                 </p>
 
+                <form onSubmit={handleLogin}>
+                  <div className="login-field">
+                    <label htmlFor="login-id">
+                      NISN/ID
+                    </label>
 
-                {/* NISN / ID */}
+                    <input
+                      id="login-id"
+                      name="loginId"
+                      type="text"
+                      placeholder="Masukan NISN atau ID"
+                      value={loginId}
+                      onChange={(event) =>
+                        setLoginId(event.target.value)
+                      }
+                      autoComplete="username"
+                      required
+                    />
+                  </div>
 
-                <div className="login-field">
+                  <div className="login-field">
+                    <label htmlFor="login-password">
+                      Kata Sandi
+                    </label>
 
-                  <label htmlFor="login-id">
-                    NISN/ID
-                  </label>
+                    <input
+                      id="login-password"
+                      name="password"
+                      type="password"
+                      placeholder="Masukan kata sandi"
+                      value={loginPassword}
+                      onChange={(event) =>
+                        setLoginPassword(event.target.value)
+                      }
+                      autoComplete="current-password"
+                      required
+                    />
+                  </div>
 
-                  <input
-                    id="login-id"
-                    type="text"
-                    placeholder="Masukan NISN atau ID"
-                  />
+                  <a
+                    href="#"
+                    className="forgot-password"
+                    onClick={(event) => event.preventDefault()}
+                  >
+                    Lupa kata sandi?
+                  </a>
 
-                </div>
+                  {loginMessage && (
+                    <p
+                      className="login-error"
+                      role="alert"
+                    >
+                      {loginMessage}
+                    </p>
+                  )}
 
-
-                {/* PASSWORD */}
-
-                <div className="login-field">
-
-                  <label htmlFor="login-password">
-                    Kata Sandi
-                  </label>
-
-                  <input
-                    id="login-password"
-                    type="password"
-                    placeholder="Masukan kata sandi"
-                  />
-
-                </div>
-
-
-                {/* FORGOT PASSWORD */}
-
-                <a
-                  href="#"
-                  className="forgot-password"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  Lupa kata sandi?
-                </a>
-
-
-                {/* LOGIN BUTTON */}
-
-                <button
-                  type="button"
-                  className="login-submit"
-                  onClick={() => setLoginSuccess(true)}
-                >
-                  Masuk
-                </button>
-
+                  <button
+                    type="submit"
+                    className="login-submit"
+                    disabled={loginLoading}
+                  >
+                    {loginLoading ? "Memeriksa..." : "Masuk"}
+                  </button>
+                </form>
               </>
-
             ) : (
-
-              /* =================================================
-                 LOGIN SUCCESS
-              ================================================= */
-
               <>
-
                 <img
                   src="/assets/logo1.png"
                   alt="Prestasi Global"
                   className="login-logo success-logo"
                 />
 
-                <h2>
-                  Masuk Berhasil!
-                </h2>
+                <h2>Masuk Berhasil!</h2>
 
                 <p className="success-description">
-                  Selamat datang di website{" "}
+                  Selamat datang,{" "}
                   <span>
-                    Permata Global!
+                    {loggedInUser?.nama || "Pengguna"}!
                   </span>
+                  <br />
+                  Login sebagai: {loggedInUser?.role || "-"}
                 </p>
 
                 <button
@@ -906,17 +635,11 @@ export default function Home() {
                 >
                   Profil
                 </button>
-
               </>
-
             )}
-
           </div>
-
         </div>
-
       )}
-
     </main>
   );
 }
