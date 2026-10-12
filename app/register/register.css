@@ -1,0 +1,309 @@
+/* Halaman register — menggunakan warna dari globals.css */
+
+.register-page {
+  min-height: 100vh;
+  background: #f7f9fc;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+}
+.register-page * { box-sizing: border-box; }
+.register-page a { text-decoration: none; }
+.register-page .navbar-container {
+  width: min(100% - 32px, 430px);
+  height: 32px;
+  padding: 0;
+}
+.register-page .logo img { width: 55px; }
+.register-page .nav-menu {
+  display: flex;
+  gap: 1px;
+  padding: 2px;
+}
+.register-page .nav-menu a {
+  padding: 3px 6px;
+  font-size: 7px;
+}
+.register-page .contact-btn {
+  padding: 4px 9px;
+  font-size: 7px;
+}
+.register-page .nav-menu a.active { background: #d6d6d6; }
+
+/* Hero atas */
+.apply-hero {
+  padding: 51px 20px 47px;
+  text-align: center;
+  background: #f7f9fc;
+}
+.apply-hero h1 {
+  color: #3b3b3b;
+  font-size: clamp(23px, 4vw, 27px);
+  font-weight: 700;
+  line-height: 1.1;
+}
+.apply-hero h1 span { color: #155db5; }
+.apply-hero p {
+  margin-top: 10px;
+  color: #697386;
+  font-size: 9px;
+  line-height: 1.3;
+}
+
+/* Pita HOW TO APPLY */
+.apply-ribbon {
+  position: relative;
+  z-index: 2;
+  height: 56px;
+  overflow: hidden;
+  background: #10376b;
+}
+.apply-ribbon-yellow, .apply-ribbon-blue {
+  position: absolute;
+  left: -3%;
+  width: 106%;
+  height: 20px;
+  padding-left: 4%;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 20px;
+}
+.apply-ribbon-yellow {
+  top: 18px;
+  color: #fff;
+  background: #ffc43d;
+  transform: rotate(1.8deg);
+}
+.apply-ribbon-blue {
+  top: 18px;
+  color: #102d56;
+  background: #2168c5;
+  transform: rotate(-1.8deg);
+}
+
+/* Proses pendaftaran */
+.apply-process {
+  position: relative;
+  margin-top: -1px;
+  padding: 36px 20px 40px;
+  overflow: hidden;
+  background: #10376b;
+}
+.apply-process-inner { width: 100%; max-width: 390px; margin: 0 auto; }
+.apply-steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 58px 48px;
+}
+.apply-connectors {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.apply-connectors path {
+  fill: none;
+  stroke: #e3eaf4;
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+  stroke-linecap: round;
+}
+.apply-step {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  padding: 6px;
+  background: #f5f7fc;
+  border-radius: 9px;
+}
+.apply-step:nth-of-type(4) { grid-column: 1; }
+.apply-step:nth-of-type(5) { grid-column: 2; }
+.apply-step:nth-of-type(6) { grid-column: 3; }
+.apply-step-body { min-height: 112px; padding: 8px 4px; border-radius: 7px; }
+.step-yellow .apply-step-body { background: #ffda79; }
+.step-green .apply-step-body { background: #abd8b9; }
+.step-blue .apply-step-body { background: #a7c5ec; }
+.step-purple .apply-step-body { background: #e7b9e9; }
+.step-pink .apply-step-body { background: #c279cf; }
+.step-final .apply-step-body { background: #fff; text-align: center; }
+.apply-pin {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  z-index: 2;
+  font-size: 19px;
+  transform: translateX(-50%) rotate(-20deg);
+}
+.apply-step h3 { margin: 0 0 5px; color: #252d3b; font-size: 7px; font-weight: 600; line-height: 1.4; }
+.apply-step p { margin: 5px 0 0; color: #4b5565; font-size: 5px; line-height: 1.4; }
+.apply-mini-box { display: flex; flex-direction: column; gap: 2px; padding: 4px; background: #fff; border-radius: 5px; }
+.apply-mini-box small { color: #778091; font-size: 5px; }
+.apply-mini-box strong { color: #39445a; font-size: 5.5px; overflow-wrap: anywhere; }
+.apply-mini-button {
+  display: block;
+  margin-top: 6px;
+  padding: 5px 4px;
+  color: #155db5 !important;
+  background: #fff;
+  border-radius: 5px;
+  font-size: 6px;
+  font-weight: 600;
+  text-align: center;
+}
+.apply-step ul { display: grid; gap: 4px; margin: 7px 0; padding: 0; list-style: none; }
+.apply-step li { padding: 3px; color: #4a3150; background: #f9e9fc; border-radius: 4px; font-size: 5px; }
+.step-final h3 { color: #155db5; font-size: 7px; }
+.step-final img { width: 100%; height: 68px; margin-top: 6px; border-radius: 5px; object-fit: cover; object-position: top center; }
+
+/* Kontak */
+.apply-contact { padding: 48px 24px; background: #f7f9fc; }
+.apply-contact-inner {
+  display: grid;
+  grid-template-columns: .9fr 1fr;
+  align-items: start;
+  gap: 38px;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.apply-contact-info h2 { color: #3b3b3b; font-size: 18px; font-weight: 700; line-height: 1.35; }
+.apply-contact-info h2 span { color: #ffc43d; }
+.apply-contact-info > p { max-width: 290px; margin-top: 8px; color: #697386; font-size: 9px; line-height: 1.7; }
+.apply-photo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 56px 56px;
+  gap: 4px;
+  max-width: 180px;
+  margin-top: 10px;
+}
+.apply-photo-grid img { width: 100%; height: 100%; border-radius: 6px; object-fit: cover; }
+.apply-photo-grid img:first-child { grid-row: 1 / 3; }
+.apply-contact-form { padding: 12px; background: #f7f9fc; border: 2px solid #e3e6eb; border-radius: 11px; }
+.apply-contact-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 10px; }
+.apply-contact-field { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
+.apply-contact-wide { grid-column: 1 / -1; }
+.apply-contact-field label { color: #414b5d; font-size: 8px; font-weight: 500; }
+.apply-contact-field input, .apply-contact-field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 4px 6px;
+  color: #333;
+  background: #e7e8eb;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  outline: none;
+  font: inherit;
+  font-size: 7px;
+}
+.apply-contact-field input { height: 18px; }
+.apply-contact-field textarea { height: 22px; min-height: 22px; resize: vertical; }
+.apply-contact-field input:focus, .apply-contact-field textarea:focus { border-color: #155db5; background: #fff; }
+.apply-contact-form > button {
+  width: 100%;
+  height: 20px;
+  margin-top: 6px;
+  color: #fff;
+  background: #ffc43d;
+  border: none;
+  border-radius: 18px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Judul dan form pendaftaran */
+.register-heading {
+  padding: 28px 20px 20px;
+  text-align: center;
+  background: #f7f9fc;
+  border-top: 1px solid #d7dbe1;
+}
+.register-heading h2 { color: #333; font-size: 22px; font-weight: 700; }
+.register-main { width: 100%; padding: 0 20px 62px; }
+.register-card {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 25px 29px 23px;
+  background: #f7f9fc;
+  border: 1px solid #dfe3e9;
+  border-radius: 9px;
+}
+.register-section { margin-bottom: 23px; }
+.register-section-title { margin: 0 0 15px; color: #333; font-size: 12px; font-weight: 600; text-align: center; }
+.register-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 13px; }
+.register-field { display: flex; min-width: 0; flex-direction: column; gap: 5px; }
+.register-wide { grid-column: 1 / -1; }
+.register-field label { color: #155db5; font-size: 9px; font-weight: 500; line-height: 1.5; }
+.register-required { color: #e64c4c; }
+.register-field input, .register-field select, .register-field textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 29px;
+  padding: 7px 9px;
+  color: #424b59;
+  background: #e7e8eb;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  outline: none;
+  font-family: inherit;
+  font-size: 9px;
+}
+.register-field input::placeholder, .register-field textarea::placeholder { color: #999faa; }
+.register-field textarea { min-height: 58px; resize: vertical; line-height: 1.6; }
+.register-field input:focus, .register-field select:focus, .register-field textarea:focus { background: #fff; border-color: #155db5; }
+.register-field input[type="file"] { min-height: 36px; padding: 6px; background: #e7e8eb; }
+.register-field input[type="file"]::file-selector-button { padding: 5px 8px; color: #155db5; background: #fff; border: none; border-radius: 4px; font-family: inherit; font-size: 9px; cursor: pointer; }
+.register-hint { color: #737b89; font-size: 9px; line-height: 1.6; }
+.register-message { margin: 8px 0 15px; padding: 11px 12px; color: #17663a; background: #e4f5e9; border-radius: 5px; font-size: 10px; line-height: 1.7; }
+.register-message.is-error { color: #a32c2c; background: #fdeaea; }
+.register-submit { display: block; width: 65%; min-height: 34px; margin: 8px auto 0; padding: 9px 20px; color: #fff; background: #ffc43d; border: none; border-radius: 20px; font-family: inherit; font-size: 10px; font-weight: 600; cursor: pointer; }
+.register-submit:hover:not(:disabled) { background: #f2b72d; }
+.register-submit:disabled { opacity: .7; cursor: wait; }
+.register-login { margin-top: 15px; color: #737b89; font-size: 10px; text-align: center; }
+.register-login a { color: #155db5; font-weight: 600; }
+
+/* Responsif */
+@media (max-width: 900px) {
+  .register-page .navbar-container { padding: 0 20px; }
+}
+@media (max-width: 600px) {
+  .register-page .navbar-container {
+    width: 100%;
+    height: 48px;
+  }
+  .register-page .logo img { width: 75px; }
+  .register-page .nav-menu { display: none; }
+  .register-page .contact-btn { padding: 8px 14px; font-size: 10px; }
+  .apply-hero { padding: 36px 18px; }
+  .apply-hero h1 { font-size: clamp(23px, 6vw, 27px); }
+  .apply-process { padding: 35px 16px; }
+  .apply-process-inner { max-width: 390px; }
+  .apply-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 35px 22px; }
+  .apply-step:nth-of-type(4), .apply-step:nth-of-type(5), .apply-step:nth-of-type(6) { grid-column: auto; }
+  .apply-connectors { display: none; }
+  .apply-step-body { min-height: 120px; }
+  .apply-contact { padding: 32px 18px; }
+  .apply-contact-inner { grid-template-columns: minmax(0, 1fr); gap: 25px; max-width: 390px; }
+  .apply-contact-info h2 { font-size: 22px; }
+  .apply-photo-grid { max-width: 100%; grid-template-rows: 95px 95px; }
+  .apply-contact-form { padding: 14px; }
+  .register-heading { padding: 25px 20px 18px; }
+  .register-heading h2 { font-size: 20px; }
+  .register-main { padding: 0 14px 40px; }
+  .register-card { padding: 22px 16px; }
+  .register-grid { gap: 12px; }
+  .register-section { margin-bottom: 24px; }
+  .register-field label { font-size: 10px; }
+  .register-field input, .register-field select, .register-field textarea { min-height: 34px; font-size: 10px; }
+  .register-field textarea { min-height: 64px; }
+  .register-submit { width: 80%; }
+}
