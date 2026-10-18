@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import "./globals.css";
 
 export default function Home() {
+  const router = useRouter();
   const [showLogin, setShowLogin] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [loginId, setLoginId] = useState("");
@@ -60,6 +62,11 @@ export default function Home() {
           result.message ||
             "Login gagal. Periksa NISN/ID dan kata sandi."
         );
+      }
+
+      if (["admin", "kepsek"].includes(result.user?.role)) {
+        router.replace("/dashboard/admin");
+        return;
       }
 
       setLoggedInUser(result.user || null);

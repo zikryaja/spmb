@@ -1,6 +1,11 @@
 
 import pool from "@/lib/db";
 import bcrypt from "bcryptjs";
+import {
+  createSessionToken,
+  SESSION_COOKIE_NAME,
+  SESSION_MAX_AGE,
+} from "@/lib/auth/session";
 
 export async function POST(request) {
   try {
@@ -34,6 +39,7 @@ export async function POST(request) {
     }
 
     const user = rows[0];
+
     const passwordValid = await bcrypt.compare(
       password,
       user.password
@@ -46,7 +52,7 @@ export async function POST(request) {
       );
     }
 
-    return Response.json({
+    const response = Response.json({
       message: "Login berhasil!",
       user: {
         id: user.id,
@@ -55,6 +61,18 @@ export async function POST(request) {
         role: user.role,
       },
     });
+
+    // Buat sesi hanya untuk admin dan kepala sekolah.
+    if (["admin", "kepsek"].includes(user.role)) {
+      const token = createSessionToken(user);
+
+      response.headers.append(
+        "Set-Cookie",
+        `${SESSION_COOKIE_NAME}=${token}; HttpOnly; Path=/; Max-Age=${SESSION_MAX_AGE}; SameSite=Lax${process.env.NODE_ENV === "production" ? "; Secure" : ""}`
+      );
+    }
+
+    return response;
   } catch (error) {
     console.error("Login error:", error);
 
