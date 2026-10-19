@@ -1,0 +1,515 @@
+
+.laporan-dashboard {
+  min-height: 100vh;
+}
+
+.laporan-content {
+  padding-top: 16px;
+  padding-bottom: 28px;
+  color: #333;
+}
+
+.laporan-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 15px;
+}
+
+.laporan-heading .admin-page-title {
+  margin: 0;
+  color: #393939;
+  font-size: clamp(25px, 2.2vw, 32px);
+  font-weight: 700;
+}
+
+.laporan-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.laporan-actions select {
+  min-height: 38px;
+  max-width: 100%;
+  padding: 0 12px;
+  color: #444;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  font: inherit;
+  font-size: 12px;
+}
+
+.laporan-actions button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  color: #fff;
+  background: #175ab9;
+  border: 0;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.laporan-actions button:hover:not(:disabled) {
+  background: #104a9b;
+}
+
+.laporan-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.laporan-alert {
+  margin-bottom: 15px;
+  padding: 12px 14px;
+  color: #b42318;
+  background: #fff0ee;
+  border: 1px solid #ffd1cc;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.laporan-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 17px;
+}
+
+.laporan-stat-card {
+  min-width: 0;
+  min-height: 89px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 11px 13px;
+  background: #fff;
+  border-left: 4px solid #168cf0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 18%);
+}
+
+.laporan-stat-card > span {
+  color: #444;
+  font-size: 12px;
+}
+
+.laporan-stat-card > strong {
+  color: #393939;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.laporan-stat-card > small {
+  color: #168cf0;
+  font-size: 10px;
+}
+
+.laporan-stat-card.green {
+  border-left-color: #83b83f;
+}
+
+.laporan-stat-card.green small {
+  color: #76ad34;
+}
+
+.laporan-stat-card.orange {
+  border-left-color: #ff8b3d;
+}
+
+.laporan-stat-card.orange small {
+  color: #ee823b;
+}
+
+.laporan-stat-card.red {
+  border-left-color: #e53939;
+}
+
+.laporan-stat-card.red small {
+  color: #d94444;
+}
+
+.laporan-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 17px;
+}
+
+.laporan-panel {
+  min-width: 0;
+  padding: 11px 12px;
+  background: #fff;
+  border-radius: 9px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 18%);
+}
+
+.laporan-panel > h2 {
+  margin: 0 0 12px;
+  color: #454545;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.report-monthly-chart {
+  width: 100%;
+  min-height: 153px;
+}
+
+.report-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 12px;
+  color: #5c6471;
+  font-size: 10px;
+}
+
+.report-chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.report-chart-legend i {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.legend-passed,
+.report-bar-segment.passed {
+  background: #168cf0;
+}
+
+.legend-pending,
+.report-bar-segment.pending {
+  background: #2bc9c6;
+}
+
+.legend-failed,
+.report-bar-segment.failed {
+  background: #ff9b62;
+}
+
+.report-chart-plot {
+  height: 126px;
+  display: flex;
+  gap: 9px;
+  padding-bottom: 18px;
+}
+
+.report-y-axis {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #8791a0;
+  font-size: 8px;
+  text-align: right;
+}
+
+.report-bars-area {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+.report-grid-line {
+  position: absolute;
+  right: 0;
+  left: 0;
+  border-top: 1px dashed #e6ebf2;
+}
+
+.report-bars {
+  position: absolute;
+  inset: 0 0 -18px;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: 7px;
+}
+
+.report-bar-column {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  max-width: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.report-bar-stack {
+  width: min(100%, 29px);
+  height: calc(100% - 18px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  border-radius: 3px 3px 0 0;
+}
+
+.report-bar-segment {
+  width: 100%;
+  min-height: 0;
+  flex-shrink: 0;
+}
+
+.report-bar-label {
+  position: absolute;
+  bottom: -16px;
+  color: #727e8d;
+  font-size: 9px;
+}
+
+.report-donut-layout {
+  min-height: 165px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 16px;
+  padding: 0 5px;
+}
+
+.report-donut {
+  position: relative;
+  width: 145px;
+  max-width: 48%;
+  flex: 0 1 145px;
+  aspect-ratio: 1;
+}
+
+.report-donut svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.report-donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.report-donut-center strong {
+  color: #444;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.report-donut-center span {
+  color: #8993a1;
+  font-size: 10px;
+}
+
+.report-donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.report-legend-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.report-legend-dot {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  margin-top: 3px;
+  border-radius: 2px;
+}
+
+.report-legend-item > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.report-legend-item strong {
+  color: #454545;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.report-legend-item small {
+  color: #8791a0;
+  font-size: 9px;
+}
+
+.laporan-chart-empty {
+  min-height: 150px;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  color: #8b96a6;
+  font-size: 12px;
+  text-align: center;
+}
+
+.laporan-program-panel {
+  padding-bottom: 8px;
+}
+
+.laporan-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.laporan-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 11px;
+}
+
+.laporan-table thead {
+  background: #f5f7fa;
+}
+
+.laporan-table th {
+  padding: 12px 11px;
+  color: #123969;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.laporan-table td {
+  padding: 13px 11px;
+  color: #484848;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.laporan-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.laporan-table tbody tr:hover {
+  background: #f8fbff;
+}
+
+.laporan-table th:first-child,
+.laporan-table td:first-child {
+  min-width: 150px;
+}
+
+.laporan-fill-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  padding: 4px 8px;
+  color: #4d8c28;
+  background: #e8f4de;
+  border-radius: 20px;
+  font-size: 9px;
+}
+
+.laporan-empty {
+  padding: 28px !important;
+  color: #8994a4 !important;
+  text-align: center;
+}
+
+.laporan-footnote {
+  margin: 12px 2px 0;
+  color: #8a95a4;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+@media (max-width: 1200px) {
+  .laporan-stat-grid {
+    gap: 11px;
+  }
+
+  .laporan-stat-card {
+    padding: 10px;
+  }
+
+  .laporan-stat-card > strong {
+    font-size: 22px;
+  }
+
+  .report-donut-layout {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .laporan-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .laporan-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .laporan-content {
+    padding: 18px 14px;
+  }
+
+  .laporan-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .laporan-actions {
+    width: 100%;
+  }
+
+  .laporan-actions select {
+    flex: 1;
+  }
+
+  .laporan-actions button {
+    font-size: 10px;
+  }
+
+  .laporan-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-donut-layout {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .report-donut {
+    max-width: 150px;
+  }
+
+  .report-donut-legend {
+    flex: 1;
+    min-width: 130px;
+  }
+}

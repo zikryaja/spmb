@@ -15,6 +15,18 @@ const initialQuestions = Array.from({ length: 40 }, (_, index) => ({
   answer: 0,
 }));
 
+async function readResponseData(response) {
+  const text = await response.text();
+
+  try {
+    return text ? JSON.parse(text) : {};
+  } catch (error) {
+    throw new Error("Server mengembalikan respons yang tidak valid.", {
+      cause: error,
+    });
+  }
+}
+
 function Icon({ name, size = 18 }) {
   const paths = {
     home: <><path d="m3 10 9-7 9 7" /><path d="M5 9v12h14V9M9 21v-7h6v7" /></>,
@@ -130,13 +142,20 @@ export default function AssessmentPage() {
           "/api/admin/assessment/questions",
           { cache: "no-store" }
         );
-        const data = await response.json();
+        const data = await readResponseData(response);
 
         if (!response.ok) {
           throw new Error(data.message || "Gagal memuat bank soal.");
         }
 
-        if (!cancelled && Array.isArray(data.questions)) {
+        if (
+          !Array.isArray(data.questions) ||
+          data.questions.length !== initialQuestions.length
+        ) {
+          throw new Error("Data bank soal dari server tidak berisi 40 soal.");
+        }
+
+        if (!cancelled) {
           const normalized = initialQuestions.map((blank) => {
             const saved = data.questions.find(
               (item) => Number(item.id) === blank.id
@@ -166,6 +185,7 @@ export default function AssessmentPage() {
         }
       } catch (error) {
         if (!cancelled) {
+          console.error("Gagal memuat bank soal:", error);
           setNotice(error.message || "Gagal memuat bank soal.");
         }
       } finally {
@@ -364,88 +384,129 @@ export default function AssessmentPage() {
   }
 
   async function saveAll() {
-    // Simpan bank soal ke MySQL pada Tab 3.
-    if (tab === 3) {
-      setSaving(true);
-
-      try {
-        // Validasi seluruh 40 soal sebelum dikirim.
-        const incomplete = questions.find(
-          (q) =>
-            !q.question.trim() ||
-            q.options.some((option) => !option.trim())
-        );
-
-        if (incomplete) {
-          setNotice(
-            `Soal nomor ${incomplete.id} belum lengkap. Isi pertanyaan dan semua pilihan jawaban.`
-          );
-          return;
-        }
-
-        const response = await fetch(
-          "/api/admin/assessment/questions",
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ questions }),
-          }
-        );
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            result.message || "Gagal menyimpan soal."
-          );
-        }
-
-        setNotice(result.message || "Bank soal berhasil disimpan ke MySQL.");
-
-        // Ambil ulang data dari database untuk verifikasi.
-        const checkResponse = await fetch(
-          "/api/admin/assessment/questions",
-          { cache: "no-store" }
-        );
-
-        const checkResult = await checkResponse.json();
-
-        if (!checkResponse.ok) {
-          throw new Error(
-            checkResult.message || "Gagal memeriksa data soal."
-          );
-        }
-
-        if (Array.isArray(checkResult.questions)) {
-          setQuestions(checkResult.questions);
-        }
-      } catch (error) {
-        console.error("Simpan soal:", error);
-        setNotice(error.message || "Terjadi kesalahan saat menyimpan soal.");
-      } finally {
-        setSaving(false);
-      }
-
-      return;
-    }
-
-    // Tab selain Tab 3 belum terhubung ke API penyimpanan nilai.
-    setNotice(
-      "Penyimpanan nilai siswa ke MySQL belum dihubungkan."
-    );
-
-    if (students.length === 0) {
+    if (tab !== 3) {
       setNotice(
-        "Belum ada nilai siswa untuk disimpan. Nilai akan tersedia setelah siswa mengikuti tes."
+        students.length === 0
+          ? "Belum ada nilai siswa untuk disimpan."
+          : "Penyimpanan nilai siswa ke MySQL belum dihubungkan."
       );
       return;
     }
 
-    setNotice(
-      "Nilai belum disimpan ke database. API penyimpanan nilai belum dihubungkan."
-    );
+    if (saving) return;
+
+    setSaving(true);
+    setNotice("");
+
+    try {
+      const invalidQuestion = questions.find(
+        (question, index) =>
+          question.id !== index + 1 ||
+          typeof question.question !== "string" ||
+          !question.question.trim() ||
+          !Array.isArray(question.options) ||
+          question.options.length !== 4 ||
+          question.options.some(
+            (option) => typeof option !== "string" || !option.trim()
+          ) ||
+          !Number.isInteger(question.answer) ||
+          question.answer < 0 ||
+          question.answer > 3
+      );
+
+      if (
+        questions.length !== initialQuestions.length ||
+        invalidQuestion
+      ) {
+        setNotice(
+          invalidQuestion
+            ? `Soal nomor ${invalidQuestion.id} belum lengkap atau tidak valid.`
+            : "Bank soal harus berisi tepat 40 soal."
+        );
+        return;
+      }
+
+      const expectedQuestions = questions.map((question) => ({
+        id: question.id,
+        question: question.question.trim(),
+        options: question.options.map((option) => option.trim()),
+        answer: question.answer,
+      }));
+
+      const response = await fetch(
+        "/api/admin/assessment/questions",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+          body: JSON.stringify({ questions: expectedQuestions }),
+        }
+      );
+      const result = await readResponseData(response);
+
+      if (!response.ok) {
+        throw new Error(
+          result.message || "Gagal menyimpan soal ke database."
+        );
+      }
+
+      const checkResponse = await fetch(
+        "/api/admin/assessment/questions",
+        { cache: "no-store" }
+      );
+      const checkResult = await readResponseData(checkResponse);
+
+      if (!checkResponse.ok) {
+        throw new Error(
+          checkResult.message ||
+            "Soal tersimpan, tetapi gagal memuat ulang data."
+        );
+      }
+
+      if (
+        !Array.isArray(checkResult.questions) ||
+        checkResult.questions.length !== expectedQuestions.length
+      ) {
+        throw new Error(
+          "Data tersimpan, tetapi GET tidak mengembalikan tepat 40 soal."
+        );
+      }
+
+      const matchesSavedData = expectedQuestions.every(
+        (expected, index) => {
+          const actual = checkResult.questions[index];
+          return (
+            Number(actual.id) === expected.id &&
+            actual.question === expected.question &&
+            Array.isArray(actual.options) &&
+            actual.options.length === expected.options.length &&
+            actual.options.every(
+              (option, optionIndex) =>
+                option === expected.options[optionIndex]
+            ) &&
+            Number(actual.answer) === expected.answer
+          );
+        }
+      );
+
+      if (!matchesSavedData) {
+        throw new Error(
+          "Data yang dibaca kembali tidak sama dengan soal yang dikirim."
+        );
+      }
+
+      setQuestions(checkResult.questions);
+      setNotice("Bank soal berhasil disimpan dan diverifikasi dari database.");
+    } catch (error) {
+      console.error("Gagal menyimpan bank soal:", error);
+      setNotice(
+        error.message || "Terjadi kesalahan saat menyimpan soal."
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   const totalStudents = students.length;

@@ -93,8 +93,21 @@ export async function PUT(request) {
       );
     }
 
-    const body = await request.json();
-    const questions = body.questions;
+    let body;
+
+    try {
+      body = await request.json();
+    } catch {
+      return Response.json(
+        { message: "Format request JSON tidak valid." },
+        { status: 400 }
+      );
+    }
+
+    const questions =
+      body && typeof body === "object" && !Array.isArray(body)
+        ? body.questions
+        : null;
 
     if (!Array.isArray(questions) || questions.length !== 40) {
       return Response.json(
@@ -107,15 +120,19 @@ export async function PUT(request) {
 
     for (const question of questions) {
       if (
-        !Number.isInteger(question.id) ||
+        !question ||
+        typeof question !== "object" ||
+        Array.isArray(question) ||
+        !Number.isSafeInteger(question.id) ||
         question.id < 1 ||
         question.id > 40 ||
         seen.has(question.id) ||
         typeof question.question !== "string" ||
+        !question.question.trim() ||
         !Array.isArray(question.options) ||
         question.options.length !== 4 ||
         !question.options.every(
-          (option) => typeof option === "string"
+          (option) => typeof option === "string" && option.trim()
         ) ||
         !Number.isInteger(question.answer) ||
         question.answer < 0 ||
@@ -147,10 +164,13 @@ export async function PUT(request) {
       );
     }
 
-    const connection = await db.getConnection();
+    let connection;
+    let transactionStarted = false;
 
     try {
+      connection = await db.getConnection();
       await connection.beginTransaction();
+      transactionStarted = true;
 
       for (const question of questions) {
         const options = question.options;
@@ -182,15 +202,27 @@ export async function PUT(request) {
       }
 
       await connection.commit();
+      transactionStarted = false;
 
       return Response.json({
         message: "Bank soal berhasil disimpan.",
       });
     } catch (error) {
-      await connection.rollback();
-      throw error;
+      if (connection && transactionStarted) {
+        try {
+          await connection.rollback();
+        } catch (rollbackError) {
+          console.error("Rollback assessment questions:", rollbackError);
+        }
+      }
+
+      console.error("PUT assessment questions:", error);
+      return Response.json(
+        { message: "Gagal menyimpan bank soal ke database." },
+        { status: 500 }
+      );
     } finally {
-      connection.release();
+      connection?.release();
     }
   } catch (error) {
     console.error("PUT assessment questions:", error);
