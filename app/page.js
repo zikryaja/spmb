@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import StudentDashboardOverlay from "@/components/StudentDashboardOverlay";
 import "./globals.css";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginMessage, setLoginMessage] = useState("");
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const [showStudentDashboard, setShowStudentDashboard] = useState(false);
 
   const openLogin = () => {
     setShowLogin(true);
@@ -66,6 +68,14 @@ export default function Home() {
 
       if (["admin", "kepsek"].includes(result.user?.role)) {
         router.replace("/dashboard/admin");
+        return;
+      }
+
+      if (result.user?.role === "calon_siswa") {
+        setShowLogin(false);
+        setShowStudentDashboard(true);
+        setLoginId("");
+        setLoginPassword("");
         return;
       }
 
@@ -646,6 +656,12 @@ export default function Home() {
             )}
           </div>
         </div>
+      )}
+
+      {showStudentDashboard && (
+        <StudentDashboardOverlay
+          onClose={() => setShowStudentDashboard(false)}
+        />
       )}
     </main>
   );

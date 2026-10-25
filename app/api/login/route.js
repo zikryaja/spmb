@@ -62,8 +62,7 @@ export async function POST(request) {
       },
     });
 
-    // Buat sesi hanya untuk admin dan kepala sekolah.
-    if (["admin", "kepsek"].includes(user.role)) {
+    if (["admin", "kepsek", "calon_siswa"].includes(user.role)) {
       const token = createSessionToken(user);
 
       response.headers.append(

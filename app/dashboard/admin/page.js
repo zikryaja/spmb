@@ -248,7 +248,7 @@ export default async function AdminDashboardPage() {
     cookieStore.get(SESSION_COOKIE_NAME)?.value
   );
 
-  if (!session) {
+  if (!session || !["admin", "kepsek"].includes(session.role)) {
     redirect("/");
   }
 
